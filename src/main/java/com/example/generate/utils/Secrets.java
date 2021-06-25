@@ -4,10 +4,15 @@ public class Secrets {
 
     public static int getSeed(String key, byte[] sign) {
         String temp = String.format("%s%s", MD5.encode(sign), MD5.encode(key.getBytes()));
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < temp.length(); i+= 16) {
-            sb.append(String.valueOf((int) temp.charAt(i)));
+        StringBuilder tempBuilder = new StringBuilder();
+        int count = 0;
+        for (int i = 1; i < temp.length() + 1; i++) {
+            tempBuilder.append(String.valueOf(temp.charAt(i - 1) % 10));
+            if (i % 8 == 0) {
+                count += Integer.parseInt(tempBuilder.toString());
+                tempBuilder.delete(0, 9);
+            }
         }
-        return Integer.parseInt(sb.toString());
+        return count;
     }
 }
